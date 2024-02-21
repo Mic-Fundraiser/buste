@@ -1,1 +1,1 @@
-reportlab==x.x.x
+reportlab==3.5.42
