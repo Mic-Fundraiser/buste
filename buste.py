@@ -72,7 +72,7 @@ def compress_files_to_zip(output_folder, zip_name):
 st.title("Generatore di buste singole con logo, mittente e destinatario")
 st.write("Usare questo tracciato di esempio in .csv: Cognome |	Nome |	Indirizzo |	CAP |	Città |	Provincia")
 
-uploaded_csv = st.file_uploader("Carica il file CSV con i dati degli indirizzi", type='csv')
+uploaded_csv = st.file_uploader("Carica il file CSV (VALORI SEPARATI DA VIRGOLA) con i dati degli indirizzi", type='csv')
 uploaded_logo = st.file_uploader("Carica il logo (opzionale)", type=['png', 'jpg', 'jpeg'])
 nome_azienda = st.text_input("Nome Azienda/Associazione")
 via_e_numero = st.text_input("Via e numero civico")
