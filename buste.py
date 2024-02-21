@@ -7,7 +7,18 @@ import os
 from zipfile import ZipFile
 import io
 
-st.image("http://michelangelogigli.it/wp-content/uploads/2023/06/logo-michelangelo-gigli-consulente-fundraising.png", width=150)
+# Calcola la larghezza delle colonne laterali per centrare l'immagine
+col1, col2, col3 = st.columns([1,2,1])
+
+with col1:
+    st.write("")  # Colonna vuota per spaziatura
+
+with col2:
+    st.image("http://michelangelogigli.it/wp-content/uploads/2023/06/logo-michelangelo-gigli-consulente-fundraising.png", width=200)  # Modifica 'width' a seconda delle dimensioni desiderate
+
+with col3:
+    st.write("")  # Colonna vuota per spaziatura
+
 
 
 # Definizione delle dimensioni della pagina per un layout orizzontale
