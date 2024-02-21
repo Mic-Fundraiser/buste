@@ -7,6 +7,9 @@ import os
 from zipfile import ZipFile
 import io
 
+st.image("http://michelangelogigli.it/wp-content/uploads/2023/06/logo-michelangelo-gigli-consulente-fundraising.png", width=150)
+
+
 # Definizione delle dimensioni della pagina per un layout orizzontale
 custom_page_width = 22 * cm  # Larghezza
 custom_page_height = 11 * cm  # Altezza
@@ -90,3 +93,24 @@ if st.button("Genera PDF"):
         zip_path = compress_files_to_zip(output_folder, zip_name)
         with open(zip_path, "rb") as f:
             st.download_button("Scarica lo ZIP con le buste", f, file_name=zip_name)
+
+
+# Footer
+footer = """
+<style>
+.footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: white;
+    color: black;
+    text-align: center;
+}
+</style>
+<div class="footer">
+  <p>Made By Michelangelo Gigli</p>
+</div>
+"""
+st.markdown(footer, unsafe_allow_html=True)
+
