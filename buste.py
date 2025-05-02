@@ -21,33 +21,51 @@ st.image(logo_url, width=300)
 st.markdown(f"<h1 style='color:{TEAL};'>Visualizzazione Dati - Raccolto in Umbria</h1>", unsafe_allow_html=True)
 st.markdown(f"<h4 style='color:{PINK};'>Liberi Subito - Libero fino alla fine</h4>", unsafe_allow_html=True)
 
-# Dati delle province
-st.subheader('Totale Raccolto per Provincia')
-data = {
-    'Provincia': ['Perugia', 'Terni'],
-    'Totale Raccolto': [1200, 850]
-}
-df = pd.DataFrame(data)
+# =====================
+# Connessione a Google Sheets
+# =====================
+# Pubblica il tuo Google Sheet come CSV (File > Pubblica sul web)
+# e copia il link CSV qui sotto
+sheet_csv_url = 'https://docs.google.com/spreadsheets/d/<YOUR_SHEET_ID>/export?format=csv&gid=<SHEET_GID>'
 
-# Formattazione dei numeri e visualizzazione tabella
+@st.cache_data(show_spinner=False)
+def load_data(url):
+    try:
+        df = pd.read_csv(url)
+        return df
+    except Exception as e:
+        st.error(f"Errore nel caricamento dei dati: {e}")
+        return pd.DataFrame(columns=['Provincia', 'Totale Raccolto'])
+
+# Carica dati da Google Sheets
+df = load_data(sheet_csv_url)
+
+# Verifica colonne e formato
+if {'Provincia','Totale Raccolto'}.issubset(df.columns):
+    df['Totale Raccolto'] = pd.to_numeric(df['Totale Raccolto'], errors='coerce').fillna(0)
+else:
+    st.error('Il dataset deve contenere le colonne "Provincia" e "Totale Raccolto"')
+
+# =====================
+# Visualizzazioni
+# =====================
+# Tabella dati
+st.subheader('Totale Raccolto per Provincia')
 df_display = df.copy()
-# Formatta il totale raccolto con separatore delle migliaia
 df_display['Totale Raccolto'] = df_display['Totale Raccolto'].map('{:,.0f}'.format)
 st.table(df_display)
 
 # Calcolo totale e obiettivo
 total_collected = df['Totale Raccolto'].sum()
 objective = 5000
-progress = total_collected / objective
+progress = total_collected / objective if objective>0 else 0
 
-# Sezione Obiettivo
+# Metriche e progresso
 st.subheader('Obiettivo Raccolto')
 col1, col2, col3 = st.columns(3)
 col1.metric('Totale Raccolto', f"{total_collected:,}")
 col2.metric('Obiettivo Totale', f"{objective:,}")
 col3.metric('Percentuale Raggiunta', f"{progress:.1%}")
-
-# Barra di progresso
 st.progress(progress)
 
 # Grafico a barre: raccolto vs obiettivo
@@ -61,7 +79,6 @@ fig_bar = px.bar(
     x='Categoria',
     y='Valore',
     text='Valore',
-    color='Categoria',
     color_discrete_map={
         'Raccolto Attuale': TEAL,
         'Obiettivo': PINK
@@ -83,7 +100,7 @@ fig_pie = px.pie(
 )
 st.plotly_chart(fig_pie, use_container_width=True)
 
-# Footer stilizzato
+# Footer
 st.markdown(
     f"<div style='background-color:{PINK};padding:10px;text-align:center;color:white;'>© 2025 PDL - La Legge Regionale</div>",
     unsafe_allow_html=True
