@@ -83,7 +83,6 @@ st.plotly_chart(fig_pie, use_container_width=True)
 
 # Footer stilizzato
 st.markdown(
-    f"<div style='background-color:{PINK};padding:10px;text-align:center;color:white;'>"
-    "© 2025 PDL - La Legge Regionale"</div>",
+    f"<div style='background-color:{PINK};padding:10px;text-align:center;color:white;'>© 2025 PDL - La Legge Regionale</div>",
     unsafe_allow_html=True
 )
