@@ -37,7 +37,7 @@ def load_data(url):
             return pd.read_csv(url, **params)
         except Exception:
             continue
-    st.error('Errore nel caricamento dei dati da Google Sheets. Controlla l'URL e il formato CSV.')
+    st.error("Errore nel caricamento dei dati da Google Sheets. Controlla l'URL e il formato CSV.")
     return None
 
 # Carica dati
