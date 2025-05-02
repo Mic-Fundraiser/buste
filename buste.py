@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+import os
 
 # Configurazione della pagina
 st.set_page_config(
@@ -13,9 +14,16 @@ st.set_page_config(
 teal = '#00839E'
 pink = '#D17DA6'
 
-# Logo
-st.image('LogoPDL_SITO_AltoSinistra (1).png', use_column_width=False, width=300)
+# Caricamento dinamico del logo
+logo_filename = 'LogoPDL_SITO_AltoSinistra (1).png'
+app_dir = os.path.dirname(__file__)
+logo_path = os.path.join(app_dir, logo_filename)
+if os.path.exists(logo_path):
+    st.image(logo_path, use_column_width=False, width=300)
+else:
+    st.warning(f"Logo non trovato: {logo_path}")
 
+# Titoli e descrizione
 st.title('Visualizzazione Dati - Raccolto in Umbria')
 st.markdown('**Liberi Subito** - Libero fino alla fine')
 
