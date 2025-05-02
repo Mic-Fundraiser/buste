@@ -29,9 +29,11 @@ data = {
 }
 df = pd.DataFrame(data)
 
-# Stile della tabella
-df_style = df.style.format({'Totale Raccolto': '{:,.0f}'}).hide_index()
-st.dataframe(df_style, use_container_width=True)
+# Formattazione dei numeri e visualizzazione tabella
+df_display = df.copy()
+# Formatta il totale raccolto con separatore delle migliaia
+df_display['Totale Raccolto'] = df_display['Totale Raccolto'].map('{:,.0f}'.format)
+st.table(df_display)
 
 # Calcolo totale e obiettivo
 total_collected = df['Totale Raccolto'].sum()
