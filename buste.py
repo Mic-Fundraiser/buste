@@ -26,7 +26,7 @@ st.markdown(f"<h4 style='color:{PINK};'>Liberi Subito - Libero fino alla fine</h
 # =====================
 # Pubblica il tuo Google Sheet come CSV (File > Pubblica sul web)
 # e copia il link CSV qui sotto
-sheet_csv_url = 'https://docs.google.com/spreadsheets/d/<YOUR_SHEET_ID>/export?format=csv&gid=<SHEET_GID>'
+sheet_csv_url = 'https://docs.google.com/spreadsheets/d/1itgXHp_mmD6HwPZK_JQLp9p3oGazEomC3RsZeN2WNgc/edit?usp=sharing'
 
 @st.cache_data(show_spinner=False)
 def load_data(url):
