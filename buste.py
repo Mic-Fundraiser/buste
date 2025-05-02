@@ -26,6 +26,7 @@ st.markdown(f"<h4 style='color:{PINK};'>Liberi Subito - Libero fino alla fine</h
 # =====================
 # Pubblica il tuo Google Sheet come CSV (File > Pubblica sul web)
 # e copia il link CSV qui sotto
+# Esempio: https://docs.google.com/spreadsheets/d/1itgXHp_mmD6HwPZK_JQLp9p3oGazEomC3RsZeN2WNgc/export?format=csv&gid=0
 sheet_csv_url = 'https://docs.google.com/spreadsheets/d/1itgXHp_mmD6HwPZK_JQLp9p3oGazEomC3RsZeN2WNgc/edit?gid=0#gid=0'
 
 @st.cache_data(show_spinner=False)
@@ -35,16 +36,22 @@ def load_data(url):
         return df
     except Exception as e:
         st.error(f"Errore nel caricamento dei dati: {e}")
-        return pd.DataFrame(columns=['Provincia', 'Totale Raccolto'])
+        return pd.DataFrame()
 
 # Carica dati da Google Sheets
 df = load_data(sheet_csv_url)
 
-# Verifica colonne e formato
-if {'Provincia','Totale Raccolto'}.issubset(df.columns):
-    df['Totale Raccolto'] = pd.to_numeric(df['Totale Raccolto'], errors='coerce').fillna(0)
-else:
-    st.error('Il dataset deve contenere le colonne "Provincia" e "Totale Raccolto"')
+# Normalizzazione nomi colonne
+df.columns = df.columns.str.strip()
+
+# Controllo colonne
+required_cols = {'Provincia', 'Totale Raccolto'}
+if not required_cols.issubset(df.columns):
+    st.error(f"Il dataset deve contenere le colonne: {', '.join(required_cols)}")
+    st.stop()
+
+# Conversione tipo e pulizia
+df['Totale Raccolto'] = pd.to_numeric(df['Totale Raccolto'], errors='coerce').fillna(0)
 
 # =====================
 # Visualizzazioni
@@ -58,9 +65,9 @@ st.table(df_display)
 # Calcolo totale e obiettivo
 total_collected = df['Totale Raccolto'].sum()
 objective = 5000
-progress = total_collected / objective if objective>0 else 0
+progress = total_collected / objective if objective > 0 else 0
 
-# Metriche e progresso
+# Sezione Obiettivo
 st.subheader('Obiettivo Raccolto')
 col1, col2, col3 = st.columns(3)
 col1.metric('Totale Raccolto', f"{total_collected:,}")
