@@ -27,24 +27,28 @@ st.markdown(f"<h4 style='color:{PINK};'>Liberi Subito - Libero fino alla fine</h
 # Pubblica il tuo Google Sheet come CSV (File > Pubblica sul web)
 # e copia il link CSV qui sotto
 # Esempio: https://docs.google.com/spreadsheets/d/1itgXHp_mmD6HwPZK_JQLp9p3oGazEomC3RsZeN2WNgc/export?format=csv&gid=0
-sheet_csv_url = 'https://docs.google.com/spreadsheets/d/1itgXHp_mmD6HwPZK_JQLp9p3oGazEomC3RsZeN2WNgc/edit?gid=0#gid=0'
+sheet_csv_url = 'https://docs.google.com/spreadsheets/d/1itgXHp_mmD6HwPZK_JQLp9p3oGazEomC3RsZeN2WNgc/export?format=csv&gid=0'
 
 @st.cache_data(show_spinner=False)
 def load_data(url):
-    try:
-        df = pd.read_csv(url)
-        return df
-    except Exception as e:
-        st.error(f"Errore nel caricamento dei dati: {e}")
-        return pd.DataFrame()
+    """Carica CSV da Google Sheets: prova delimitatore comma, poi punto e virgola."""
+    for params in ({}, {'sep': ';', 'engine': 'python'}):
+        try:
+            return pd.read_csv(url, **params)
+        except Exception:
+            continue
+    st.error('Errore nel caricamento dei dati da Google Sheets. Controlla l'URL e il formato CSV.')
+    return None
 
-# Carica dati da Google Sheets
+# Carica dati
 df = load_data(sheet_csv_url)
+if df is None:
+    st.stop()
 
-# Normalizzazione nomi colonne
-df.columns = df.columns.str.strip()
+# Normalizzazione colonne (trasforma in stringhe e rimuove spazi)
+df.columns = [str(c).strip() for c in df.columns]
 
-# Controllo colonne
+# Controllo colonne richieste
 required_cols = {'Provincia', 'Totale Raccolto'}
 if not required_cols.issubset(df.columns):
     st.error(f"Il dataset deve contenere le colonne: {', '.join(required_cols)}")
